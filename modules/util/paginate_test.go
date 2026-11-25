@@ -37,3 +37,14 @@ func TestPaginateSlice(t *testing.T) {
 	testVar = PaginateSlice(testVar, 2, 2)
 	assert.Equal(t, []*Test{{Val: 4}}, testVar)
 }
+
+
+func TestPaginateSliceOverflow(t *testing.T) {
+	maxInt := int(^uint(0) >> 1)
+	for _, page := range []int{maxInt, maxInt/2 + 2} {
+		assert.Empty(t, PaginateSlice([]string{"a", "b"}, page, 2))
+	}
+	assert.Empty(t, PaginateSlice([]string{}, maxInt, maxInt))
+	assert.Nil(t, PaginateSlice([]string(nil), 1, 2))
+	assert.Equal(t, []string{"a", "b"}, PaginateSlice([]string{"a", "b"}, 1, maxInt))
+}
